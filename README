@@ -1,3 +1,20 @@
 Limited documentation available in the wiki.
  
 http://wiki.github.com/psinnott/gntp-send
+
+
+The Makefiles have been removed, it now relies on just cmake.
+
+So in theory the steps should now be (on any platform):
+
+    mkdir build && cd build
+    ccmake ..  // fill in the detail for the build
+    
+    
+    
+    cmake --install . --config RELEASE
+    or just build
+    cmake --build . --config RELEASE
+    or
+    cmake --build . --target install --config DEBUG
+
