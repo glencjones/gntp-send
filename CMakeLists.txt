@@ -1,6 +1,8 @@
 cmake_minimum_required( VERSION 3.27 )
 
-project(growl)
+project( growl )
+
+find_package(PkgConfig)
 
 option(WITH_STATIC    "Build static growl library"           OFF)
 
@@ -45,6 +47,11 @@ add_executable( gntp-send source/gntp-send.c )
 target_sources( gntp-send PRIVATE ${GROWL_NTP_C_SRC})
 
 
+option(BUILD_PKGCONFIG "Create and install pkgconfig" ON)
+if( BUILD_PKGCONFIG )
+  configure_file ("${CMAKE_CURRENT_SOURCE_DIR}/package.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}++.pc" @ONLY)
+  install (FILES "${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}++.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+endif ()
 
 if( WITH_STATIC)
   INSTALL(
