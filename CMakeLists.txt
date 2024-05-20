@@ -1,16 +1,10 @@
-cmake_minimum_required( VERSION 2.6 )
+cmake_minimum_required( VERSION 3.27 )
+
+project(growl)
 
 option(WITH_STATIC    "Build static growl library"           OFF)
 
 include_directories ( ./headers )
-
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS                  "${CMAKE_CXX_FLAGS}  -Wall -Wextra -Wnon-virtual-dtor -fno-strict-aliasing")
-  set(CMAKE_CXX_FLAGS_RELEASE          "-O2 ${CMAKE_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBUGINFO "-g -O2 ${CMAKE_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS_DEBUG            "-g -ggdb -fno-reorder-blocks -fno-schedule-insns -fno-inline ${CMAKE_CXX_FLAGS}")
-  set(CMAKE_CXX_FLAGS_DEBUGFULL        "-g3 ${CMAKE_CXX_FLAGS_DEBUG}")
-endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if( WIN32 )
   link_libraries ( ws2_32 )
@@ -23,25 +17,51 @@ set( GROWL_NTP_C_SRC
 
 add_library( growl SHARED  ${GROWL_NTP_C_SRC} )
 set_target_properties( growl PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
+set_target_properties( growl PROPERTIES PUBLIC_HEADER headers/growl.h)
+set_target_properties( growl PROPERTIES VERSION 1.0.0 SOVERSION 1)
 
 if( WITH_STATIC )
   add_library( growl-static  STATIC ${GROWL_NTP_C_SRC} )
   set_target_properties( growl-static PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
+  set_target_properties( growl-static PROPERTIES PUBLIC_HEADER headers/growl.h)
+  set_target_properties( growl-static PROPERTIES VERSION 1.0.0 SOVERSION 1)
 endif( WITH_STATIC )
 
 add_library( growl++ SHARED source/growl++.cpp )
 target_link_libraries ( growl++  growl)
 set_target_properties( growl++ PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
+set_target_properties( growl++ PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
+set_target_properties( growl++ PROPERTIES VERSION 1.0.0 SOVERSION 1)
 
 if( WITH_STATIC )
-add_library( growl++-static STATIC source/growl++.cpp )
-target_link_libraries ( growl++-static growl)
-set_target_properties( growl++-static PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
+  add_library( growl++-static STATIC source/growl++.cpp )
+  target_link_libraries ( growl++-static growl)
+  set_target_properties( growl++-static PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
+  set_target_properties( growl++-static PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
+  set_target_properties( growl++-static PROPERTIES VERSION 1.0.0 SOVERSION 1)
 endif( WITH_STATIC )
 
 add_executable( gntp-send source/gntp-send.c )
-target_link_libraries ( gntp-send growl)
+target_sources( gntp-send PRIVATE ${GROWL_NTP_C_SRC})
 
-add_executable( gntp-send++ source/gntp-send++.cpp )
-target_link_libraries ( gntp-send++ growl growl++)
 
+
+if( WITH_STATIC)
+  INSTALL(
+    TARGETS gntp-send DESTINATION ${CMAKE_INSTALL_BINDIR}
+    TARGETS growl
+    TARGETS growl++
+    TARGETS growl-static
+    TARGETS growl++-static
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
+else()
+  INSTALL(
+    TARGETS gntp-send DESTINATION ${CMAKE_INSTALL_BINDIR}
+    TARGETS growl
+    TARGETS growl++
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  )
+endif( WITH_STATIC )
