@@ -1,7 +1,8 @@
 cmake_minimum_required( VERSION 3.27 )
 
-project( growl )
+project( growl VERSION 1.0.1 DESCRIPTION "C++/C GNTP libs and cli " )
 
+include(GNUInstallDirs)
 find_package(PkgConfig)
 
 option(WITH_STATIC    "Build static growl library"           OFF)
@@ -20,27 +21,27 @@ set( GROWL_NTP_C_SRC
 add_library( growl SHARED  ${GROWL_NTP_C_SRC} )
 set_target_properties( growl PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
 set_target_properties( growl PROPERTIES PUBLIC_HEADER headers/growl.h)
-set_target_properties( growl PROPERTIES VERSION 1.0.0 SOVERSION 1)
+set_target_properties( growl PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
 
 if( WITH_STATIC )
   add_library( growl-static  STATIC ${GROWL_NTP_C_SRC} )
   set_target_properties( growl-static PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
   set_target_properties( growl-static PROPERTIES PUBLIC_HEADER headers/growl.h)
-  set_target_properties( growl-static PROPERTIES VERSION 1.0.0 SOVERSION 1)
+  set_target_properties( growl-static PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
 endif( WITH_STATIC )
 
 add_library( growl++ SHARED source/growl++.cpp )
 target_link_libraries ( growl++  growl)
 set_target_properties( growl++ PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
 set_target_properties( growl++ PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
-set_target_properties( growl++ PROPERTIES VERSION 1.0.0 SOVERSION 1)
+set_target_properties( growl++ PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
 
 if( WITH_STATIC )
   add_library( growl++-static STATIC source/growl++.cpp )
   target_link_libraries ( growl++-static growl)
   set_target_properties( growl++-static PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
   set_target_properties( growl++-static PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
-  set_target_properties( growl++-static PROPERTIES VERSION 1.0.0 SOVERSION 1)
+  set_target_properties( growl++-static PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
 endif( WITH_STATIC )
 
 add_executable( gntp-send source/gntp-send.c )
