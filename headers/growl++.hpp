@@ -26,6 +26,7 @@ class GROWL_CPP_EXPORT Growl
 	public:
 		Growl(const Growl_Protocol _protocol, const char *const _password, const char* const _appliciation, const char **const _notifications, const int _notifications_count);
 		Growl(const Growl_Protocol _protocol, const char *const _server, const char *const _password, const char *const _application, const char **const _notifications, const int _notifications_count);
+		Growl(const Growl_Protocol _protocol, const char *const _server, const char *const _password, const char *const _application, const char **const _notifications, const int _notifications_count, const char *const icon);
 		~Growl();
 		void Notify(const char *const notification, const char *const title, const char* const message);
 		void Notify(const char *const notification, const char *const title, const char* const message, const char *const url, const char *const icon);

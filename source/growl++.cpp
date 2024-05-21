@@ -24,6 +24,15 @@ Growl::Growl(const Growl_Protocol _protocol, const char *const _server, const ch
 	Register(_notifications, _notifications_count);
 }
 
+Growl::Growl(const Growl_Protocol _protocol, const char *const _server, const char *const _password, const char *const _application, const char **_notifications, const int _notifications_count, const char* const icon )
+{
+	server = strdup(_server);
+	if (_password) password = strdup(_password);
+	protocol = _protocol;
+	application = strdup(_application);
+	Register(_notifications, _notifications_count, icon);
+}
+
 
 void Growl::Register(const char **const notifications, const int notifications_count , const char *const icon )
 {

@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.27 )
 
-project( growl VERSION 1.0.1 DESCRIPTION "C++/C GNTP libs and cli " )
+project( growl VERSION 1.0.2 DESCRIPTION "C++/C GNTP libs and cli " )
 
 include(GNUInstallDirs)
 find_package(PkgConfig)
