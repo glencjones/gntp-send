@@ -25,12 +25,14 @@ set_target_properties( growl PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${P
 
 if( WITH_STATIC )
   add_library( growl-static  STATIC ${GROWL_NTP_C_SRC} )
+  target_sources( growl-static PRIVATE ${GROWL_NTP_C_SRC})
   set_target_properties( growl-static PROPERTIES COMPILE_FLAGS "-DGROWL_DLL" )
   set_target_properties( growl-static PROPERTIES PUBLIC_HEADER headers/growl.h)
   set_target_properties( growl-static PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION ${PROJECT_VERSION_MAJOR} )
 endif( WITH_STATIC )
 
 add_library( growl++ SHARED source/growl++.cpp )
+  target_sources( growl++ PRIVATE ${GROWL_NTP_C_SRC})
 target_link_libraries ( growl++  growl)
 set_target_properties( growl++ PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
 set_target_properties( growl++ PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
@@ -38,6 +40,7 @@ set_target_properties( growl++ PROPERTIES VERSION ${PROJECT_VERSION} SOVERSION $
 
 if( WITH_STATIC )
   add_library( growl++-static STATIC source/growl++.cpp )
+  target_sources( growl++-static PRIVATE ${GROWL_NTP_C_SRC})
   target_link_libraries ( growl++-static growl)
   set_target_properties( growl++-static PROPERTIES COMPILE_FLAGS "-DGROWL_CPP_DLL" )
   set_target_properties( growl++-static PROPERTIES PUBLIC_HEADER headers/growl++.hpp)
